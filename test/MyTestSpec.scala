@@ -1,6 +1,6 @@
+import model.OrderItem
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json._
-import services.TaxCalculator
 import utils._
 
 /**
@@ -39,9 +39,17 @@ class MyTestSpec extends PlaySpec {
         }
 
         """)
+      def parse(value: JsValue): Either[JsObject, Seq[OrderItem]] = {
+        val parseResult = value.validate[Seq[OrderItem]]
 
-      val prod2 = ProductParser.parse(json2)
-      val prod3 = ProductParser.parse(json)
+        parseResult.fold(
+          errors => parseSingle(value),
+          place => Right(Seq() ++ place)
+        )
+      }
+
+      val prod2 = parse(json2)
+      val prod3 = parse(json)
 
       prod2 match {
         case Right(order) => println(TaxCalculator.calculate(order).fullTax)
@@ -55,15 +63,15 @@ class MyTestSpec extends PlaySpec {
 
   "CurrencyUtils" should {
     "follow precision" in {
-      CurrencyUtils.taxValue(1, 10) mustBe 0.1
-      println(CurrencyUtils.taxValue(12.49, 15))
-      println(CurrencyUtils.taxValue(12.49, 5))
-      println(CurrencyUtils.taxValue(0.85, 15))
-      println(CurrencyUtils.taxValue(12.49, 10))
-      println(CurrencyUtils.taxValue(14.99, 15))
-      println(CurrencyUtils.taxValue(14.99, 10))
-      println(CurrencyUtils.taxValue(12.49, 5))
-      CurrencyUtils.taxValue(12.49, 15) mustBe 0.1
+      CurrencyUtils.getPart(1, 10) mustBe 0.1
+      println(CurrencyUtils.getPart(12.49, 15))
+      println(CurrencyUtils.getPart(12.49, 5))
+      println(CurrencyUtils.getPart(0.85, 15))
+      println(CurrencyUtils.getPart(12.49, 10))
+      println(CurrencyUtils.getPart(14.99, 15))
+      println(CurrencyUtils.getPart(14.99, 10))
+      println(CurrencyUtils.getPart(12.49, 5))
+      CurrencyUtils.getPart(12.49, 15) mustBe 0.1
     }
   }
 }
