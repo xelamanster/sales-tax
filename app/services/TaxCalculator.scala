@@ -1,25 +1,28 @@
 package services
 
-import model.Product
+import model.OrderUnit
+import utils.CurrencyUtils
 
 object TaxCalculator {
-  def calculate(products: Seq[Product]) = {
-    products.map(p => (TaxParser.getTax(p), p))
+  def calculate(order: Seq[OrderUnit]): Bil = {
+    val items = order.map(TaxParser.getTax)
+
+    Bil(items)
   }
 }
 
 object TaxParser {
   val ExemptionKeyWords = Seq(
-    "bread",
+    "book",
     "chocolate",
     "pills"
   )
 
   val ImportedKeyWord = "imported"
 
-  def getTax(product: Product): RecipeItem = {
-    val isExempt = ExemptionKeyWords.exists(product.description.contains)
-    val isImported = product.description.contains(ImportedKeyWord)
+  def getTax(product: OrderUnit): BilItem = {
+    val isExempt = ExemptionKeyWords.exists(product.description.toLowerCase.contains)
+    val isImported = product.description.toLowerCase.contains(ImportedKeyWord)
 
     def genTax: UnitTax = {
       if(isExempt && isImported) new UnitTax(product) with ExemptTaxRule with ImportedTaxRule
@@ -28,32 +31,37 @@ object TaxParser {
       else new UnitTax(product) with BaseTaxRule
     }
 
-    RecipeItem(product, genTax)
+    BilItem(product, genTax)
   }
 }
 
-case class RecipeItem(product: Product, tax: UnitTax) {
-  val fullTax = tax.value * product.count
-  val fullPrice = product.unitPrice * product.count + fullTax
+case class Bil(items: Seq[BilItem]) {
+  val fullPrice = items.map(_.fullPrice).sum
+  val fullTax = items.map(_.fullTax).sum
 }
 
-class UnitTax(product: Product) {
+case class BilItem(order: OrderUnit, tax: UnitTax) {
+  val fullTax = tax.taxValue * order.count
+  val fullPrice = order.unitPrice * order.count + fullTax
+}
+
+class UnitTax(product: OrderUnit) {
   self: TaxRule =>
-  val value = product.unitPrice * increaseValue / 100
+  val taxValue = CurrencyUtils.taxValue(product.unitPrice, tax)
 }
 
 trait TaxRule {
-  def increaseValue: Int
+  def tax: Int
 }
 
 trait BaseTaxRule extends TaxRule {
-  override def increaseValue = 10
+  override def tax = 10
 }
 
 trait ExemptTaxRule extends TaxRule {
-  override def increaseValue = 0
+  override def tax = 0
 }
 
 trait ImportedTaxRule extends TaxRule {
-  abstract override def increaseValue = super.increaseValue + 5
+  abstract override def tax = super.tax + 5
 }

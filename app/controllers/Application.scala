@@ -1,24 +1,24 @@
 package controllers
 
-import play.api._
+import model.OrderUnit
+import play.api.libs.json.{JsError, JsNumber, Json, Reads}
 import play.api.mvc._
+import services.TaxCalculator
+import utils.ProductParser._
+
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class Application extends Controller {
 
-  def index = Action {
-    Ok(views.html.index("Your new application is ready."))
+
+  def index = Action(validateJson[Seq[OrderUnit]]) { request =>
+    val elementes = request.body
+    val tax = TaxCalculator.calculate(elementes).fullTax
+
+    Ok(Json.obj("SalesTax" -> tax))
   }
 
-//  def savePlace = Action(BodyParsers.parse.json) { request =>
-//    val placeResult = request.body.validate[Place]
-//    placeResult.fold(
-//      errors => {
-//        BadRequest(Json.obj("status" ->"Error", "message" -> JsError.toJson(errors)))
-//      },
-//      place => {
-//        Place.save(place)
-//        Ok(Json.obj("status" ->"OK", "message" -> ("Place '"+place.name+"' saved.") ))
-//      }
-//    )
-//  }
+  def validateJson[A : Reads] = BodyParsers.parse.json.validate(
+    _.validate[A].asEither.left.map(e => BadRequest(JsError.toJson(e)))
+  )
 }
