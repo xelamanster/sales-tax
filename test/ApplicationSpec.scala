@@ -37,7 +37,7 @@ class ApplicationSpec extends PlaySpec with OneAppPerTest {
       ]
         """)
 
-      val home = route(app, FakeRequest(POST, "/", FakeHeaders(), json)).get
+      val home = route(app, FakeRequest(POST, "/taxcalculator", FakeHeaders(), json)).get
 
       status(home) mustBe OK
       contentType(home) mustBe Some("application/json")
@@ -54,7 +54,7 @@ class ApplicationSpec extends PlaySpec with OneAppPerTest {
         }
         """)
 
-      val home = route(app, FakeRequest(POST, "/", FakeHeaders(), json)).get
+      val home = route(app, FakeRequest(POST, "/taxcalculator", FakeHeaders(), json)).get
       status(home) mustBe BAD_REQUEST
     }
   }

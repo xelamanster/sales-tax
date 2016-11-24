@@ -1,7 +1,7 @@
-import model.OrderItem
+import model.{OrderItem, Tax}
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json._
-import utils._
+import utils.MathUtils
 
 /**
   * Created by Alexander Chugunov on 24.11.16.
@@ -39,39 +39,40 @@ class MyTestSpec extends PlaySpec {
         }
 
         """)
-      def parse(value: JsValue): Either[JsObject, Seq[OrderItem]] = {
-        val parseResult = value.validate[Seq[OrderItem]]
+//      def parse(value: JsValue): Either[JsObject, Seq[OrderItem]] = {
+//        val parseResult = value.validate[Seq[OrderItem]]
+//
+//        parseResult.isSuccess
+//        parseResult.fold(
+//          errors => parseSingle(value),
+//          place => Right(Seq() ++ place)
+//        )
+//      }
 
-        parseResult.fold(
-          errors => parseSingle(value),
-          place => Right(Seq() ++ place)
-        )
-      }
+//      val prod2 = parse(json2)
+//      val prod3 = parse(json)
 
-      val prod2 = parse(json2)
-      val prod3 = parse(json)
-
-      prod2 match {
-        case Right(order) => println(TaxCalculator.calculate(order).fullTax)
-      }
-
-      prod3 match {
-        case Right(order) => println(TaxCalculator.calculate(order).fullTax)
-      }
+//      prod2 match {
+//        case Right(order) => println(Tax.calculate(order).fullTax)
+//      }
+//
+//      prod3 match {
+//        case Right(order) => println(TaxCalculator.calculate(order).fullTax)
+//      }
     }
   }
 
   "CurrencyUtils" should {
     "follow precision" in {
-      CurrencyUtils.getPart(1, 10) mustBe 0.1
-      println(CurrencyUtils.getPart(12.49, 15))
-      println(CurrencyUtils.getPart(12.49, 5))
-      println(CurrencyUtils.getPart(0.85, 15))
-      println(CurrencyUtils.getPart(12.49, 10))
-      println(CurrencyUtils.getPart(14.99, 15))
-      println(CurrencyUtils.getPart(14.99, 10))
-      println(CurrencyUtils.getPart(12.49, 5))
-      CurrencyUtils.getPart(12.49, 15) mustBe 0.1
+      MathUtils.part(1, 10) mustBe 0.1
+      println(MathUtils.part(12.49, 15))
+      println(MathUtils.part(12.49, 5))
+      println(MathUtils.part(0.85, 15))
+      println(MathUtils.part(12.49, 10))
+      println(MathUtils.part(14.99, 15))
+      println(MathUtils.part(14.99, 10))
+      println(MathUtils.part(12.49, 5))
+      MathUtils.part(12.49, 15) mustBe 0.1
     }
   }
 }

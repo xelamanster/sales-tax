@@ -4,15 +4,17 @@ import model.{Bill, OrderItem}
 
 import play.api.libs.json._
 import play.api.mvc._
+import utils.JsonUtils._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class Application extends Controller {
-  def index = Action(validateJson[Seq[OrderItem]]) { request =>
-    val elements = request.body
-    val bill = Bill(elements)
+class TaxCalculator extends Controller {
+  def billing = Action(validateJson[Seq[OrderItem]]) { request =>
 
-    Ok(Bill.toJson(bill))
+    val items = request.body
+    val bill = Bill(items)
+
+    Ok(toJson(bill))
   }
 
   private def validateJson[A : Reads] = BodyParsers.parse.json.validate(

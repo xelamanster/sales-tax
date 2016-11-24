@@ -1,7 +1,5 @@
 package model
 
-import play.api.libs.json.{JsObject, Json}
-
 /**
   * Created by Alexander Chugunov on 24.11.16.
   */
@@ -9,20 +7,18 @@ object Bill {
   val SalesTax: String = "SalesTax"
 
   def apply(order: Seq[OrderItem]): Bill =
-    Bill(order.map(toBillItem))
+    new Bill(order.map(toBillItem))
 
   private def toBillItem(item: OrderItem): BillItem =
-    BillItem(item, Tax.calculate(item))
-
-  def toJson(bill: Bill): JsObject = Json.obj(SalesTax -> bill.fullTax)
+    new BillItem(item, Tax(item))
 }
 
-case class Bill(items: Seq[BillItem]) {
+class Bill(items: Seq[BillItem]) {
   val fullTax = items.map(_.fullTax).sum
   val fullPrice = items.map(_.fullPrice).sum
 }
 
-case class BillItem(item: OrderItem, tax: Tax) {
+class BillItem(item: OrderItem, tax: Tax) {
   val fullTax = tax.tax * item.count
   val fullPrice = item.unitPrice * item.count + fullTax
 }

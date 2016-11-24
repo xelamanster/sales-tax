@@ -1,6 +1,6 @@
 package model
 
-import utils.CurrencyUtils
+import utils.MathUtils
 
 /**
   * Created by Alexander Chugunov on 24.11.16.
@@ -13,10 +13,16 @@ object Tax {
     "pills"
   )
 
-  def calculate(product: OrderItem): Tax = {
-    val isExempt = ExemptionKeyWords.exists(product.description.toLowerCase.contains)
-    val isImported = product.description.toLowerCase.contains(ImportedKeyWord)
+  def apply(product: OrderItem): Tax = {
+    val itemContains = product.description.toLowerCase.contains _
 
+    val isExempt = ExemptionKeyWords.exists(itemContains)
+    val isImported = itemContains(ImportedKeyWord)
+
+    Tax(product, isExempt, isImported)
+  }
+
+  def apply(product: OrderItem, isExempt: Boolean, isImported: Boolean): Tax = {
     if(isExempt && isImported) new Tax(product) with ExemptTaxRule with ImportedTaxRule
     else if(isImported) new Tax(product) with BaseTaxRule with ImportedTaxRule
     else if(isExempt) new Tax(product) with ExemptTaxRule
@@ -24,23 +30,23 @@ object Tax {
   }
 }
 
-class Tax(item: OrderItem) {
+class Tax (item: OrderItem) {
   self: TaxRule =>
-  val tax = CurrencyUtils.getPart(item.unitPrice, rate)
+  val tax = MathUtils.part(item.unitPrice, rate)
 }
 
-private trait TaxRule {
+trait TaxRule {
   def rate: Int
 }
 
-private trait BaseTaxRule extends TaxRule {
+trait BaseTaxRule extends TaxRule {
   override def rate = 10
 }
 
-private trait ExemptTaxRule extends TaxRule {
+trait ExemptTaxRule extends TaxRule {
   override def rate = 0
 }
 
-private trait ImportedTaxRule extends TaxRule {
+trait ImportedTaxRule extends TaxRule {
   abstract override def rate = super.rate + 5
 }
