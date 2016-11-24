@@ -6,8 +6,8 @@ package model
 object Bill {
   val SalesTax: String = "SalesTax"
 
-  def apply(order: Seq[OrderItem]): Bill =
-    new Bill(order.map(toBillItem))
+  def apply(items: Seq[OrderItem]): Bill =
+    new Bill(items.map(toBillItem))
 
   private def toBillItem(item: OrderItem): BillItem =
     new BillItem(item, Tax(item))

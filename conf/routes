@@ -1,2 +1,2 @@
-POST    /taxcalculator                      controllers.TaxCalculator.billing
+POST    /taxcalculator                      controllers.TaxController.calculate
     

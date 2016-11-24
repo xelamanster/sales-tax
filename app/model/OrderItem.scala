@@ -11,4 +11,4 @@ object OrderItem {
   val UnitPrice = "unitPrice"
 }
 
-case class OrderItem(description: String, count: Long, unitPrice: Double)
+case class OrderItem(description: String, count: Long, unitPrice: BigDecimal)
