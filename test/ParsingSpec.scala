@@ -4,9 +4,6 @@ import org.scalatestplus.play.PlaySpec
 import play.api.libs.json._
 import utils.JsonUtils._
 
-/**
-  * Created by Alexander Chugunov on 24.11.16.
-  */
 class ParsingSpec extends PlaySpec {
 
   "JsonUtils" should {

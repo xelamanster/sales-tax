@@ -4,9 +4,6 @@ import utils.MathUtils
 import Tax._
 import data.TestData
 
-/**
-  * Created by Alexander Chugunov on 25.11.16.
-  */
 class ModelSpec extends PlaySpec {
   val testValue = 1
 

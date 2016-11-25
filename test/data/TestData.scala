@@ -2,9 +2,6 @@ package data
 
 import model.OrderItem
 
-/**
-  * Created by Alexander Chugunov on 24.11.16.
-  */
 object TestData {
   val invalidJsonOrder =
     """

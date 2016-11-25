@@ -1,9 +1,6 @@
 import org.scalatestplus.play.PlaySpec
 import utils.MathUtils.part
 
-/**
-  * Created by Alexander Chugunov on 24.11.16.
-  */
 class MathSpec extends PlaySpec {
   private val testSamples = Seq(
     (1.0, 10, 0.10),

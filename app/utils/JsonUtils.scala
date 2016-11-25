@@ -5,8 +5,10 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json._
 
-/**
-  * Created by Alexander Chugunov on 24.11.16.
+/** The object contains implicit `Reads`, `Writes` and methods
+  * for converting model's classes to and from Json.
+  *
+  * @author Alexander Chugunov
   */
 object JsonUtils {
   implicit val orderItemReads: Reads[OrderItem] = (
