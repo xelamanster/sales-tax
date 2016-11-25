@@ -35,8 +35,8 @@ class ModelSpec extends PlaySpec {
   }
 
   "Bill" should {
-    TestData.bundles.foreach { bundle =>
-      val (items, tax, price) = bundle
+    TestData.orders.foreach { order =>
+      val (items, tax, price) = order
       val bill = Bill(items)
 
       s"calculate valid tax for $items" in {
