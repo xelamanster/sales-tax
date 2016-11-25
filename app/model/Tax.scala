@@ -11,6 +11,7 @@ object Tax {
   val DefaultTax = 10
 
   val ImportedKeyWord = "imported"
+
   val ExemptionKeyWords = Seq(
     "book",
     "chocolate",
@@ -20,36 +21,34 @@ object Tax {
   def apply(item: OrderItem): Tax = {
     val itemContains = item.description.toLowerCase.contains _
 
-    val isExempt = ExemptionKeyWords.exists(itemContains)
-    val isImported = itemContains(ImportedKeyWord)
+    var rule: TaxRule = DefaultTaxRule()
 
-    Tax(item, isExempt, isImported)
+    if (ExemptionKeyWords.exists(itemContains))
+      rule = ExemptTaxRule()
+
+    if (itemContains(ImportedKeyWord))
+      rule = ImportedTaxRule(rule)
+
+    new Tax(item, rule)
   }
 
-  def apply(item: OrderItem, isExempt: Boolean, isImported: Boolean): Tax =
-    if(isExempt && isImported) new Tax(item) with ExemptTaxRule with ImportedTaxRule
-    else if(isImported) new Tax(item) with DefaultTaxRule with ImportedTaxRule
-    else if(isExempt) new Tax(item) with ExemptTaxRule
-    else new Tax(item) with DefaultTaxRule
-}
+  class Tax(item: OrderItem, rule: TaxRule) {
+    val unitTax = MathUtils.part(item.unitPrice, rule.rate)
+  }
 
-class Tax (item: OrderItem) {
-  self: TaxRule =>
-  val unitTax = MathUtils.part(item.unitPrice, rate)
-}
+  private trait TaxRule {
+    def rate: Int
+  }
 
-trait TaxRule {
-  def rate: Int
-}
+  private case class DefaultTaxRule extends TaxRule {
+    override def rate = Tax.DefaultTax
+  }
 
-trait DefaultTaxRule extends TaxRule {
-  override def rate = Tax.DefaultTax
-}
+  private case class ExemptTaxRule extends TaxRule {
+    override def rate = Tax.ExemptTax
+  }
 
-trait ExemptTaxRule extends TaxRule {
-  override def rate = Tax.ExemptTax
-}
-
-trait ImportedTaxRule extends TaxRule {
-  abstract override def rate = super.rate + Tax.ImportedTax
+  private case class ImportedTaxRule(baseRule: TaxRule) extends TaxRule {
+    override def rate = baseRule.rate + Tax.ImportedTax
+  }
 }

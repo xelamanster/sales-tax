@@ -1,5 +1,7 @@
 package model
 
+import model.Tax._
+
 /**
   * Created by Alexander Chugunov on 24.11.16.
   */
