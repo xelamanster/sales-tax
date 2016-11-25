@@ -3,21 +3,33 @@ package model
 import utils.MathUtils
 
 /**
-  * Created by Alexander Chugunov on 24.11.16.
+  * Contains tax rates, keywords for specifying tax rule
+  * and is a factory for [[model.Tax]] instances.
+  *
+  * @author Alexander Chugunov
   */
 object Tax {
+
   val ExemptTax = 0
   val ImportedTax = 5
-  val DefaultTax = 10
+  val BasicTax = 10
 
   val ImportedKeyWord = "imported"
 
+  /** Keywords for find exempt items */
   val ExemptionKeyWords = Seq(
     "book",
     "chocolate",
     "pills"
   )
 
+  /**
+    * Creates the [[model.Tax]] instance with rate specified according
+    * to the rules and defined using items description.
+    *
+    * @param item  order item for which need to create tax.
+    * @return      [[model.Tax]] instance.
+    */
   def apply(item: OrderItem): Tax = {
     val itemContains = item.description.toLowerCase.contains _
 
@@ -37,6 +49,11 @@ object Tax {
   }
 }
 
+/**
+  * Holds tax for one unit.
+  *
+  * @author Alexander Chugunov
+  */
 trait Tax {
   val unitTax: BigDecimal
 }
@@ -46,7 +63,7 @@ private trait TaxRule {
 }
 
 private object DefaultTaxRule extends TaxRule {
-  override def rate = Tax.DefaultTax
+  override def rate = Tax.BasicTax
 }
 
 private object ExemptTaxRule extends TaxRule {

@@ -22,12 +22,12 @@ class ModelSpec extends PlaySpec {
 
     "return imported tax" in {
       Tax(testItem(s"Test $ImportedKeyWord"))
-        .unitTax mustBe testTax(DefaultTax + ImportedTax)
+        .unitTax mustBe testTax(BasicTax + ImportedTax)
     }
 
     "return default tax" in {
       Tax(testItem(s"Test some description"))
-        .unitTax mustBe testTax(DefaultTax)
+        .unitTax mustBe testTax(BasicTax)
     }
   }
 

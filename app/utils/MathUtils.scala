@@ -2,7 +2,7 @@ package utils
 
 import scala.math.BigDecimal._
 
-/** The object contains methods for performing
+/** Contains methods for performing
   * numeric operations.
   *
   * @author Alexander Chugunov
@@ -10,12 +10,12 @@ import scala.math.BigDecimal._
 object MathUtils {
 
   /**
-    * Returns the closest `BigDecimal` to the argument, that
+    * Returns the number closest to the argument, that
     * rounded up according to the specified `scale`.
     *
     * @param num   value to be rounded.
     * @param scale number of decimal places.
-    * @return      value of the argument rounded up.
+    * @return      result.
     */
   def round(num: BigDecimal, scale: Int = 0): BigDecimal =
     num.setScale(scale, RoundingMode.UP)
