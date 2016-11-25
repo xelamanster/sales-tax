@@ -1,4 +1,4 @@
-# sales-tax
+# sales-tax [![Build Status](https://travis-ci.org/xelamanster/sales-tax.svg?branch=master)](https://travis-ci.org/xelamanster/sales-tax)
 
 Based on Play Framework, using Scala. For build uses Sbt.
 Application assumes that requests contains js array with orders.
