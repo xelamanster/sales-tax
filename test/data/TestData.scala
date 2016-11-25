@@ -2,6 +2,10 @@ package data
 
 import model.OrderItem
 
+/** Contains data for testing purposes.
+  *
+  * @author Alexander Chugunov
+  */
 object TestData {
   val invalidJsonOrder =
     """

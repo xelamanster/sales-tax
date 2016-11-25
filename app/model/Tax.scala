@@ -2,8 +2,7 @@ package model
 
 import utils.MathUtils
 
-/**
-  * Contains tax rates, keywords for specifying tax rule
+/** Contains tax rates, keywords for specifying tax rule
   * and is a factory for [[model.Tax]] instances.
   *
   * @author Alexander Chugunov
@@ -23,8 +22,7 @@ object Tax {
     "pills"
   )
 
-  /**
-    * Creates the [[model.Tax]] instance with rate specified according
+  /** Creates the [[model.Tax]] instance with rate specified according
     * to the rules and defined using items description.
     *
     * @param item  order item for which need to create tax.
@@ -49,8 +47,7 @@ object Tax {
   }
 }
 
-/**
-  * Holds tax for one unit.
+/** Holds tax for one order unit.
   *
   * @author Alexander Chugunov
   */

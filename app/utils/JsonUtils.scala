@@ -5,7 +5,7 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json._
 
-/** Contains implicit `Reads`, `Writes` and methods
+/** Contains methods and implicit `Reads`, `Writes`
   * for converting model's classes to and from Json.
   *
   * @author Alexander Chugunov

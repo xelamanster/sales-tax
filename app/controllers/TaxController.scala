@@ -8,14 +8,14 @@ import utils.JsonUtils._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-/** Handles orders from requests in json
+/** Handles orders from requests in json format
   *
   * @author Alexander Chugunov
   */
 class TaxController extends Controller {
 
   /** Return `Action` that calculates bill for order items
-    * in request and return sum of the sales tax in respond.
+    * from the request and return sum of the sales tax in respond.
     */
   def calculate = Action(validateJson[Seq[OrderItem]]) { request =>
 
