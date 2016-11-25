@@ -14,7 +14,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
   */
 class TaxController extends Controller {
 
-  /** Return `Action` that calculates bill for order items
+  /** Returns `Action` that calculates bill for order items
     * from the request and return sum of the sales tax in respond.
     */
   def calculate = Action(validateJson[Seq[OrderItem]]) { request =>
