@@ -9,6 +9,7 @@ import utils.JsonUtils._
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class TaxController extends Controller {
+
   def calculate = Action(validateJson[Seq[OrderItem]]) { request =>
 
     val items = request.body
