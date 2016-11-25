@@ -8,20 +8,20 @@ class ModelSpec extends PlaySpec {
   val testValue = 1
 
   "Tax" should {
-    ExemptionKeyWords.foreach { exempt =>
+    ExemptionKeywords.foreach { exempt =>
       s"return exempt tax for $exempt" in {
         Tax(testItem(s"Test $exempt "))
           .unitTax mustBe testTax(ExemptTax)
       }
 
       s"return imported exempt tax for $exempt" in {
-        Tax(testItem(s"Test $exempt some text $ImportedKeyWord"))
+        Tax(testItem(s"Test $exempt some text $ImportedKeyword"))
           .unitTax mustBe testTax(ExemptTax + ImportedTax)
       }
     }
 
     "return imported tax" in {
-      Tax(testItem(s"Test $ImportedKeyWord"))
+      Tax(testItem(s"Test $ImportedKeyword"))
         .unitTax mustBe testTax(BasicTax + ImportedTax)
     }
 

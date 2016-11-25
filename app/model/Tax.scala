@@ -13,10 +13,10 @@ object Tax {
   val ImportedTax = 5
   val BasicTax = 10
 
-  val ImportedKeyWord = "imported"
+  val ImportedKeyword = "imported"
 
   /** Keywords for find exempt items */
-  val ExemptionKeyWords = Seq(
+  val ExemptionKeywords = Seq(
     "book",
     "chocolate",
     "pills"
@@ -33,17 +33,13 @@ object Tax {
 
     var rule: TaxRule = DefaultTaxRule
 
-    if (ExemptionKeyWords.exists(itemContains))
+    if (ExemptionKeywords.exists(itemContains))
       rule = ExemptTaxRule
 
-    if (itemContains(ImportedKeyWord))
+    if (itemContains(ImportedKeyword))
       rule = new ImportedTaxRule(rule)
 
-    new TaxImpl(item.unitPrice, rule)
-  }
-
-  private class TaxImpl(price: BigDecimal, rule: TaxRule) extends Tax {
-    override val unitTax = MathUtils.part(price, rule.rate)
+    new Tax(item.unitPrice, rule)
   }
 }
 
@@ -51,8 +47,8 @@ object Tax {
   *
   * @author Alexander Chugunov
   */
-trait Tax {
-  val unitTax: BigDecimal
+class Tax(price: BigDecimal, rule: TaxRule) {
+  val unitTax = MathUtils.part(price, rule.rate)
 }
 
 private trait TaxRule {
