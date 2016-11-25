@@ -25,7 +25,7 @@ object Tax {
   /** Creates the [[model.Tax]] instance with rate specified according
     * to the rules and defined using items description.
     *
-    * @param item  order item for which need to create tax.
+    * @param item  order item for which need to calculate tax.
     * @return      [[model.Tax]] instance.
     */
   def apply(item: OrderItem): Tax = {
