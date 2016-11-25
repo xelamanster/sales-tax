@@ -39,11 +39,11 @@ object Tax {
     if (itemContains(ImportedKeyWord))
       rule = new ImportedTaxRule(rule)
 
-    new TaxImpl(item, rule)
+    new TaxImpl(item.unitPrice, rule)
   }
 
-  private class TaxImpl (item: OrderItem, rule: TaxRule) extends Tax {
-    override val unitTax = MathUtils.part(item.unitPrice, rule.rate)
+  private class TaxImpl(price: BigDecimal, rule: TaxRule) extends Tax {
+    override val unitTax = MathUtils.part(price, rule.rate)
   }
 }
 
