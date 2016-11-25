@@ -16,7 +16,7 @@ class MathSpec extends PlaySpec {
 
   "MathUtils.part()" should {
     forAll(testSamples) {(value, percentage, result) =>
-      s"return rounded up $percentage% from $value" in {
+      s"round $percentage% of $value up to $result" in {
         part(value, percentage) mustBe result
       }
     }

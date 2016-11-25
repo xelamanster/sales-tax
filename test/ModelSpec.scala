@@ -36,11 +36,11 @@ class ModelSpec extends PlaySpec {
       val (items, tax, price) = order
       val bill = Bill(items)
 
-      s"calculate valid tax for $items" in {
+      s"calculate tax for $items as $tax" in {
         bill.fullTax mustBe tax
       }
 
-      s"calculate valid price for $items" in {
+      s"calculate price for $items as $price" in {
         bill.fullPrice mustBe price
       }
     }

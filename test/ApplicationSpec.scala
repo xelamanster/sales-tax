@@ -15,18 +15,18 @@ class ApplicationSpec extends PlaySpec with OneAppPerTest {
   }
 
   "TaxController" should {
-    "return a bad request" in {
+    "return a unprocessable entity" in {
       val json: JsValue = Json.parse(TestData.invalidJsonOrder)
       val respond = route(app, FakeRequest(POST, "/taxcalculator", FakeHeaders(), json)).get
 
-      status(respond) mustBe BAD_REQUEST
+      status(respond) mustBe UNPROCESSABLE_ENTITY
     }
 
     TestData.orders.foreach { order =>
       val (items, tax, _) = order
       val json = Json.toJson(items)
 
-      s"return a valid respond for $json" in {
+      s"respond for $json with $tax" in {
         val respond = route(app, FakeRequest(POST, "/taxcalculator", FakeHeaders(), json)).get
 
         status(respond) mustBe OK

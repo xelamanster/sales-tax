@@ -30,6 +30,6 @@ class TaxController extends Controller {
       _.validate[A]
         .asEither
         .left
-        .map(e => BadRequest(JsError.toJson(e)))
+        .map(e => UnprocessableEntity(JsError.toJson(e)))
     )
 }
