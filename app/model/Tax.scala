@@ -21,13 +21,13 @@ object Tax {
   def apply(item: OrderItem): Tax = {
     val itemContains = item.description.toLowerCase.contains _
 
-    var rule: TaxRule = DefaultTaxRule()
+    var rule: TaxRule = DefaultTaxRule
 
     if (ExemptionKeyWords.exists(itemContains))
-      rule = ExemptTaxRule()
+      rule = ExemptTaxRule
 
     if (itemContains(ImportedKeyWord))
-      rule = ImportedTaxRule(rule)
+      rule = new ImportedTaxRule(rule)
 
     new Tax(item, rule)
   }
@@ -40,15 +40,15 @@ object Tax {
     def rate: Int
   }
 
-  private case class DefaultTaxRule extends TaxRule {
+  private object DefaultTaxRule extends TaxRule {
     override def rate = Tax.DefaultTax
   }
 
-  private case class ExemptTaxRule extends TaxRule {
+  private object ExemptTaxRule extends TaxRule {
     override def rate = Tax.ExemptTax
   }
 
-  private case class ImportedTaxRule(baseRule: TaxRule) extends TaxRule {
+  private class ImportedTaxRule(baseRule: TaxRule) extends TaxRule {
     override def rate = baseRule.rate + Tax.ImportedTax
   }
 }
