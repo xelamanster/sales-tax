@@ -1,7 +1,8 @@
-import model.{OrderItem, Tax}
+import model.{Bill, OrderItem, Tax}
 import org.scalatestplus.play.PlaySpec
 import utils.MathUtils
 import Tax._
+import data.TestData
 
 /**
   * Created by Alexander Chugunov on 25.11.16.
@@ -30,6 +31,21 @@ class ModelSpec extends PlaySpec {
     "return default tax" in {
       Tax(testItem(s"Test some description"))
         .unitTax mustBe testTax(DefaultTax)
+    }
+  }
+
+  "Bill" should {
+    TestData.bundles.foreach{ bundle =>
+      val (items, tax, price) = bundle
+      val bill = Bill(items)
+
+      s"calculate valid tax for $items" in {
+        bill.fullTax mustBe tax
+      }
+
+      s"calculate valid price for $items" in {
+        bill.fullPrice mustBe price
+      }
     }
   }
 
