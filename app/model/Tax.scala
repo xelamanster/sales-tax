@@ -25,7 +25,7 @@ object Tax {
   /** Creates the [[model.Tax]] instance with rate specified according
     * to the rules and defined using items description.
     *
-    * @param item  order item for which need to create tax.
+    * @param item  order item for which need to calculate tax.
     * @return      [[model.Tax]] instance.
     */
   def apply(item: OrderItem): Tax = {
@@ -39,11 +39,11 @@ object Tax {
     if (itemContains(ImportedKeyWord))
       rule = new ImportedTaxRule(rule)
 
-    new TaxImpl(item, rule)
+    new TaxImpl(item.unitPrice, rule)
   }
 
-  private class TaxImpl (item: OrderItem, rule: TaxRule) extends Tax {
-    override val unitTax = MathUtils.part(item.unitPrice, rule.rate)
+  private class TaxImpl(price: BigDecimal, rule: TaxRule) extends Tax {
+    override val unitTax = MathUtils.part(price, rule.rate)
   }
 }
 

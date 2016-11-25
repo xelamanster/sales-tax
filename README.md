@@ -1,10 +1,11 @@
 # sales-tax
 
-Based on Play Framework, using Scala.
-Application assumes that requests has js array with orders.
+Based on Play Framework, using Scala. For build uses Sbt.
+Application assumes that requests contains js array with orders.
 
 Controller converts Json from the request to the Seq[OrderItem], then creates Bill containing items with tax,
-computed for each item. And finally sends back respond with full tax value from the Bill.
+computed for each item. And finally sends back respond with full tax value from the Bill. Also uses BigDecimal for prices and taxes
+with purpose to save constant precision in results.
 
 ## How to test
 1. Run tests:
