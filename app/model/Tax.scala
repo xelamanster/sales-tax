@@ -29,26 +29,30 @@ object Tax {
     if (itemContains(ImportedKeyWord))
       rule = new ImportedTaxRule(rule)
 
-    new Tax(item, rule)
+    new TaxImpl(item, rule)
   }
 
-  class Tax(item: OrderItem, rule: TaxRule) {
-    val unitTax = MathUtils.part(item.unitPrice, rule.rate)
+  private class TaxImpl (item: OrderItem, rule: TaxRule) extends Tax {
+    override val unitTax = MathUtils.part(item.unitPrice, rule.rate)
   }
+}
 
-  private trait TaxRule {
-    def rate: Int
-  }
+trait Tax {
+  val unitTax: BigDecimal
+}
 
-  private object DefaultTaxRule extends TaxRule {
-    override def rate = Tax.DefaultTax
-  }
+private trait TaxRule {
+  def rate: Int
+}
 
-  private object ExemptTaxRule extends TaxRule {
-    override def rate = Tax.ExemptTax
-  }
+private object DefaultTaxRule extends TaxRule {
+  override def rate = Tax.DefaultTax
+}
 
-  private class ImportedTaxRule(baseRule: TaxRule) extends TaxRule {
-    override def rate = baseRule.rate + Tax.ImportedTax
-  }
+private object ExemptTaxRule extends TaxRule {
+  override def rate = Tax.ExemptTax
+}
+
+private class ImportedTaxRule(baseRule: TaxRule) extends TaxRule {
+  override def rate = baseRule.rate + Tax.ImportedTax
 }
