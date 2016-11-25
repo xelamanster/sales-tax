@@ -1,9 +1,9 @@
 import data.TestData
-import model.OrderItem
+import model.Bill
 import org.scalatestplus.play._
 import play.api.libs.json.{JsValue, Json}
-import play.api.test._
 import play.api.test.Helpers._
+import play.api.test._
 import utils.JsonUtils._
 
 class ApplicationSpec extends PlaySpec with OneAppPerTest {
@@ -15,28 +15,27 @@ class ApplicationSpec extends PlaySpec with OneAppPerTest {
   }
 
   "TaxController" should {
-    "return valid responds" in {
-      def check(bundle: (Seq[OrderItem], Double)): Unit = {
-        val (items, tax) = bundle
+    "return a bad request" in {
+      val json: JsValue = Json.parse(TestData.invalidJsonBundle)
+      val respond = route(app, FakeRequest(POST, "/taxcalculator", FakeHeaders(), json)).get
 
-        val json = Json.toJson(items)
-        val home = route(app, FakeRequest(POST, "/taxcalculator", FakeHeaders(), json)).get
-
-        status(home) mustBe OK
-        contentType(home) mustBe Some("application/json")
-        contentAsString(home) must include (s"""{"SalesTax":$tax}""")
-      }
-
-      TestData.bundles.foreach(check)
+      status(respond) mustBe BAD_REQUEST
     }
 
-    "return bad request" in {
-      val json: JsValue = Json.parse(TestData.invalidJsonBundle)
-      val home = route(app, FakeRequest(POST, "/taxcalculator", FakeHeaders(), json)).get
+    TestData.bundles.foreach { bundle =>
+      val (items, tax, _) = bundle
+      val json = Json.toJson(items)
 
-      status(home) mustBe BAD_REQUEST
+      s"return a valid respond for $json" in {
+        val respond = route(app, FakeRequest(POST, "/taxcalculator", FakeHeaders(), json)).get
+
+        status(respond) mustBe OK
+        contentType(respond) mustBe Some("application/json")
+        contentAsString(respond) must include(s"""{"${Bill.SalesTax}":$tax}""")
+      }
     }
   }
+
 }
 
 

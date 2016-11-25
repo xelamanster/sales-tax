@@ -1,46 +1,28 @@
+import data.TestData
+import model.OrderItem
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json._
-import utils.MathUtils
+import utils.JsonUtils._
 
 /**
   * Created by Alexander Chugunov on 24.11.16.
   */
 class ParsingSpec extends PlaySpec {
 
-  "" should {
-    "" in {
-//      val json: JsValue = Json.parse(
-//       )
+  "JsonUtils" should {
+    val (sampleItems, _, _) = TestData.jsonBundleConverted
 
-      val json2: JsValue = Json.parse(
-        """
-        {
-          "description": "Book",
-          "count": 1,
-          "unitPrice": 12.49
-        }
+    "read an item from json" in {
+      val json: JsValue = Json.parse(TestData.validJsonBundle)
+      val items = json.validate[Seq[OrderItem]].get
 
-        """)
-//      def parse(value: JsValue): Either[JsObject, Seq[OrderItem]] = {
-//        val parseResult = value.validate[Seq[OrderItem]]
-//
-//        parseResult.isSuccess
-//        parseResult.fold(
-//          errors => parseSingle(value),
-//          place => Right(Seq() ++ place)
-//        )
-//      }
+      items mustBe sampleItems
+    }
 
-//      val prod2 = parse(json2)
-//      val prod3 = parse(json)
+    "write an item to json" in {
+      val json: JsValue = Json.toJson(sampleItems)
 
-//      prod2 match {
-//        case Right(order) => println(Tax.calculate(order).fullTax)
-//      }
-//
-//      prod3 match {
-//        case Right(order) => println(TaxCalculator.calculate(order).fullTax)
-//      }
+      json.toString() mustBe TestData.validJsonBundle
     }
   }
 }

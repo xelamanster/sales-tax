@@ -19,8 +19,6 @@ class Bill(items: Seq[BillItem]) {
 }
 
 class BillItem(item: OrderItem, tax: Tax) {
-  val fullTax = tax.tax * item.count
+  val fullTax = tax.unitTax * item.count
   val fullPrice = item.unitPrice * item.count + fullTax
 }
-
-
