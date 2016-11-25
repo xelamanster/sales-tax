@@ -5,7 +5,7 @@ import utils.MathUtils.part
   * Created by Alexander Chugunov on 24.11.16.
   */
 class MathSpec extends PlaySpec {
-  val roundSamples = Seq(
+  private val testSamples = Seq(
     (1.0, 10, 0.10),
     (12.49, 15, 1.90),
     (0.85, 15, 0.15),
@@ -16,10 +16,10 @@ class MathSpec extends PlaySpec {
   )
 
   "MathUtils.part()" should {
-    roundSamples foreach { sample =>
+    testSamples.foreach { sample =>
       val (value, percentage, result) = sample
 
-      s"get $percentage% from $value and round up" in {
+      s"return rounded up $percentage% from $value" in {
         part(value, percentage) mustBe result
       }
     }

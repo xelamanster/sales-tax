@@ -11,7 +11,7 @@ class ModelSpec extends PlaySpec {
   val testValue = 1
 
   "Tax" should {
-    ExemptionKeyWords.foreach{ exempt =>
+    ExemptionKeyWords.foreach { exempt =>
       s"return exempt tax for $exempt" in {
         Tax(testItem(s"Test $exempt "))
           .unitTax mustBe testTax(ExemptTax)
@@ -35,7 +35,7 @@ class ModelSpec extends PlaySpec {
   }
 
   "Bill" should {
-    TestData.bundles.foreach{ bundle =>
+    TestData.bundles.foreach { bundle =>
       val (items, tax, price) = bundle
       val bill = Bill(items)
 
