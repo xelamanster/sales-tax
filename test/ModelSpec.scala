@@ -1,8 +1,9 @@
-import model.{Bill, OrderItem, Tax}
+import model.{Bill, SaleItem, Tax}
 import org.scalatestplus.play.PlaySpec
 import utils.MathUtils
 import Tax._
 import data.TestData
+import org.scalatest.prop.TableDrivenPropertyChecks._
 
 class ModelSpec extends PlaySpec {
   val testValue = 1
@@ -32,16 +33,15 @@ class ModelSpec extends PlaySpec {
   }
 
   "Bill" should {
-    TestData.orders.foreach { order =>
-      val (items, tax, price) = order
-      val bill = Bill(items)
+    forAll(TestData.sales) { (expectedTax, expectedPrice, sales) =>
+      val bill = Bill(sales)
 
-      s"calculate tax for $items as $tax" in {
-        bill.fullTax mustBe tax
+      s"calculate tax for $sales as $expectedTax" in {
+        bill.salesTax mustBe expectedTax
       }
 
-      s"calculate price for $items as $price" in {
-        bill.fullPrice mustBe price
+      s"calculate price for $sales as $expectedPrice" in {
+        bill.salesPrice mustBe expectedPrice
       }
     }
   }
@@ -49,6 +49,6 @@ class ModelSpec extends PlaySpec {
   def testTax(percentage: Int): BigDecimal =
     MathUtils.part(testValue, percentage)
 
-  def testItem(description: String): OrderItem =
-    OrderItem(description, 1, testValue)
+  def testItem(description: String): SaleItem =
+    SaleItem(description, 1, testValue)
 }

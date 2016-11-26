@@ -7,35 +7,35 @@ package model
 object Bill {
   val SalesTax: String = "SalesTax"
 
-  /** Returns [[model.Bill]] that holds order items
-    * with calculated tax.
+  /** Returns [[model.Bill]] that holds sale items
+    * with summary tax and price.
     *
     * @param items bill items.
     */
-  def apply(items: Seq[OrderItem]): Bill =
+  def apply(items: Seq[SaleItem]): Bill =
     new Bill(items.map(toBillItem))
 
-  private def toBillItem(item: OrderItem): BillItem =
+  private def toBillItem(item: SaleItem): BillItem =
     new BillItem(item, Tax(item))
 }
 
-/** Holds full tax and price for whole order.
+/** Holds summary tax and price for all sales.
   *
   * @param items bill items.
   * @author Alexander Chugunov
   */
 class Bill(items: Seq[BillItem]) {
-  val fullTax = items.map(_.fullTax).sum
-  val fullPrice = items.map(_.fullPrice).sum
+  val salesTax = items.map(_.saleTax).sum
+  val salesPrice = items.map(_.salePrice).sum
 }
 
-/** Holds full tax and price for one order item.
+/** Holds sale tax and price for one sale item.
   *
-  * @param item order item.
-  * @param tax  tax calculated for the order item's unit.
+  * @param item sale item.
+  * @param tax  tax calculated for the sale item's unit.
   * @author Alexander Chugunov
   */
-class BillItem(item: OrderItem, tax: Tax) {
-  val fullTax = tax.unitTax * item.count
-  val fullPrice = item.unitPrice * item.count + fullTax
+class BillItem(item: SaleItem, tax: Tax) {
+  val saleTax = tax.unitTax * item.count
+  val salePrice = item.unitPrice * item.count + saleTax
 }

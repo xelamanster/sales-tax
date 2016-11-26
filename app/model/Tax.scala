@@ -25,10 +25,10 @@ object Tax {
   /** Creates the [[model.Tax]] instance with rate specified according
     * to the rules and defined using items description.
     *
-    * @param item  order item for which need to calculate tax.
+    * @param item  sale item for which need to calculate tax.
     * @return      [[model.Tax]] instance.
     */
-  def apply(item: OrderItem): Tax = {
+  def apply(item: SaleItem): Tax = {
     val itemContains = item.description.toLowerCase.contains _
 
     var rule: TaxRule = DefaultTaxRule
@@ -52,17 +52,17 @@ class Tax(price: BigDecimal, rule: TaxRule) {
 }
 
 private trait TaxRule {
-  def rate: Int
+  val rate: Int
 }
 
 private object DefaultTaxRule extends TaxRule {
-  override def rate = Tax.BasicTax
+  override val rate = Tax.BasicTax
 }
 
 private object ExemptTaxRule extends TaxRule {
-  override def rate = Tax.ExemptTax
+  override val rate = Tax.ExemptTax
 }
 
 private class ImportedTaxRule(baseRule: TaxRule) extends TaxRule {
-  override def rate = baseRule.rate + Tax.ImportedTax
+  override val rate = baseRule.rate + Tax.ImportedTax
 }

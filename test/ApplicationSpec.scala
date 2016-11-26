@@ -1,5 +1,6 @@
 import data.TestData
 import model.Bill
+import org.scalatest.prop.TableDrivenPropertyChecks._
 import org.scalatestplus.play._
 import play.api.libs.json.{JsValue, Json}
 import play.api.test.Helpers._
@@ -9,29 +10,31 @@ import utils.JsonUtils._
 class ApplicationSpec extends PlaySpec with OneAppPerTest {
 
   "Routes" should {
-    "send 404 on a bad request" in {
-      route(app, FakeRequest(GET, "/wrong")).map(status) mustBe Some(NOT_FOUND)
+    "respond with 404 on a bad request" in {
+      val respond = route(app, FakeRequest(GET, "/wrong")).get
+
+      status(respond) mustBe NOT_FOUND
     }
   }
 
   "TaxController" should {
-    "return a unprocessable entity" in {
-      val json: JsValue = Json.parse(TestData.invalidJsonOrder)
+
+    "respond with 'unprocessable entity'" in {
+      val json: JsValue = Json.parse(TestData.invalidJsonSale)
       val respond = route(app, FakeRequest(POST, "/taxcalculator", FakeHeaders(), json)).get
 
       status(respond) mustBe UNPROCESSABLE_ENTITY
     }
 
-    TestData.orders.foreach { order =>
-      val (items, tax, _) = order
-      val json = Json.toJson(items)
+    forAll(TestData.sales) { (expectedTax, expectedPrice, sales) =>
+      val json = Json.toJson(sales)
 
-      s"respond for $json with $tax" in {
+      s"respond for $json with $expectedTax" in {
         val respond = route(app, FakeRequest(POST, "/taxcalculator", FakeHeaders(), json)).get
 
         status(respond) mustBe OK
         contentType(respond) mustBe Some("application/json")
-        contentAsString(respond) must include(s"""{"${Bill.SalesTax}":$tax}""")
+        contentAsString(respond) must equal(s"""{"${Bill.SalesTax}":$expectedTax}""")
       }
     }
   }

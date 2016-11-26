@@ -1,6 +1,6 @@
 package utils
 
-import model.{Bill, OrderItem}
+import model.{Bill, SaleItem}
 import play.api.libs.functional.syntax._
 import play.api.libs.json.Reads._
 import play.api.libs.json._
@@ -11,18 +11,18 @@ import play.api.libs.json._
   * @author Alexander Chugunov
   */
 object JsonUtils {
-  implicit val orderItemReads: Reads[OrderItem] = (
-    (JsPath \ OrderItem.Description).read[String] and
-      (JsPath \ OrderItem.Count).read[Long] and
-      (JsPath \ OrderItem.UnitPrice).read[BigDecimal]
-    )(OrderItem.apply _)
+  implicit val orderItemReads: Reads[SaleItem] = (
+    (JsPath \ SaleItem.Description).read[String] and
+      (JsPath \ SaleItem.Count).read[Long] and
+      (JsPath \ SaleItem.UnitPrice).read[BigDecimal]
+    )(SaleItem.apply _)
 
-  implicit val orderItemWrites: Writes[OrderItem] = (
-    (JsPath \ OrderItem.Description).write[String] and
-      (JsPath \ OrderItem.Count).write[Long] and
-      (JsPath \ OrderItem.UnitPrice).write[BigDecimal]
-    )(unlift(OrderItem.unapply))
+  implicit val orderItemWrites: Writes[SaleItem] = (
+    (JsPath \ SaleItem.Description).write[String] and
+      (JsPath \ SaleItem.Count).write[Long] and
+      (JsPath \ SaleItem.UnitPrice).write[BigDecimal]
+    )(unlift(SaleItem.unapply))
 
   def toJson(bill: Bill): JsObject =
-    Json.obj(Bill.SalesTax -> bill.fullTax)
+    Json.obj(Bill.SalesTax -> bill.salesTax)
 }
