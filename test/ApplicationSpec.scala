@@ -20,7 +20,7 @@ class ApplicationSpec extends PlaySpec with OneAppPerTest {
   "TaxController" should {
 
     "respond on improperly formatted json with 'unprocessable entity'" in {
-      val json = Json.parse(TestData.invalidJsonSale)
+      val json = Json.parse(TestData.invalidJsonSales)
       val respond = route(app, FakeRequest(POST, "/taxcalculator", FakeHeaders(), json)).get
 
       status(respond) mustBe UNPROCESSABLE_ENTITY

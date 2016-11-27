@@ -10,7 +10,7 @@ import org.scalatest.prop.TableDrivenPropertyChecks._
 object TestData {
 
   /** Assumes that json should contains array.*/
-  val invalidJsonSale = """{"description":"Book","count":1,"unitPrice":12.49}"""
+  val invalidJsonSales = """{"description":"Book","count":1,"unitPrice":12.49}"""
 
   val jsonSales = Seq(
     unformatted(

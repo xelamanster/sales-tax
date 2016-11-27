@@ -28,7 +28,7 @@ class ParsingSpec extends PlaySpec {
     }
 
     "fail validation of the json with invalid format" in {
-        val json = Json.parse(TestData.invalidJsonSale)
+        val json = Json.parse(TestData.invalidJsonSales)
         val result = json.validate[Seq[SalesItem]]
 
         result.isSuccess mustBe false
