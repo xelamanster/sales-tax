@@ -9,9 +9,9 @@ import utils.MathUtils
   */
 object Tax {
 
-  val ExemptTax = 0
-  val ImportTax = 5
-  val BasicTax = 10
+  val ExemptTaxRate = 0
+  val ImportTaxRate = 5
+  val BasicTaxRate = 10
 
   val ImportedKeyword = "imported"
 
@@ -56,13 +56,13 @@ private trait TaxRule {
 }
 
 private object DefaultTaxRule extends TaxRule {
-  override val rate = Tax.BasicTax
+  override val rate = Tax.BasicTaxRate
 }
 
 private object ExemptTaxRule extends TaxRule {
-  override val rate = Tax.ExemptTax
+  override val rate = Tax.ExemptTaxRate
 }
 
 private class ImportedTaxRule(baseRule: TaxRule) extends TaxRule {
-  override val rate = baseRule.rate + Tax.ImportTax
+  override val rate = baseRule.rate + Tax.ImportTaxRate
 }

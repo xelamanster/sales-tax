@@ -11,26 +11,26 @@ class ModelSpec extends PlaySpec {
       s"be calculated for $exempt item from exemption category" in {
         val tax = Tax(s"Test $exempt ")
 
-        tax.unitTax mustBe ExemptTax
+        tax.unitTax mustBe ExemptTaxRate
       }
 
       s"be calculated for imported $exempt item from exemption category" in {
         val tax = Tax(s"Test $exempt some description $ImportedKeyword")
 
-        tax.unitTax mustBe (ExemptTax + ImportTax)
+        tax.unitTax mustBe (ExemptTaxRate + ImportTaxRate)
       }
     }
 
     "be calculated for imported item" in {
       val tax = Tax(s"Test $ImportedKeyword")
 
-      tax.unitTax mustBe (BasicTax + ImportTax)
+      tax.unitTax mustBe (BasicTaxRate + ImportTaxRate)
     }
 
     "be calculated with" in {
       val tax = Tax(s"Test some description")
 
-      tax.unitTax mustBe BasicTax
+      tax.unitTax mustBe BasicTaxRate
     }
   }
 
