@@ -47,7 +47,7 @@ object Tax {
   *
   * @author Alexander Chugunov
   */
-class Tax(price: BigDecimal, rule: TaxRule) {
+class Tax private(price: BigDecimal, rule: TaxRule) {
   val unitTax = MathUtils.part(price, rule.rate)
 }
 
