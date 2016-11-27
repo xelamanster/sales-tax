@@ -10,20 +10,20 @@ class ParsingSpec extends PlaySpec {
 
     val salesWithIndex = TestData.sales.map(_._3).zipWithIndex
 
-    salesWithIndex.foreach { case (sale, index) =>
-      val jsonSale: String = TestData.jsonSales(index)
+    salesWithIndex.foreach { case (sales, index) =>
+      val jsonSales: String = TestData.jsonSales(index)
 
-      s"read a sale: $sale from json: $jsonSale" in {
-        val json = Json.parse(jsonSale)
+      s"read a sales: $sales from json: $jsonSales" in {
+        val json = Json.parse(jsonSales)
         val items = json.validate[Seq[SalesItem]].get
 
-        items mustBe sale
+        items mustBe sales
       }
 
-      s"write a sale: $sale to json: $jsonSale" in {
-        val json = Json.toJson(sale)
+      s"write a sales: $sales to json: $jsonSales" in {
+        val json = Json.toJson(sales)
 
-        json.toString() mustBe jsonSale
+        json.toString() mustBe jsonSales
       }
     }
 
