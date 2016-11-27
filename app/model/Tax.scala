@@ -2,15 +2,15 @@ package model
 
 import utils.MathUtils
 
-/** Contains tax rates, keywords for specifying tax rule
-  * and is a factory for [[model.Tax]] instances.
+/** Contains tax rates, keywords for specifying tax
+  * rule and is a factory for [[Tax]] instances.
   *
   * @author Alexander Chugunov
   */
 object Tax {
 
   val ExemptTax = 0
-  val ImportedTax = 5
+  val ImportTax = 5
   val BasicTax = 10
 
   val ImportedKeyword = "imported"
@@ -22,13 +22,13 @@ object Tax {
     "pills"
   )
 
-  /** Creates the [[model.Tax]] instance with rate specified according
+  /** Creates the [[Tax]] instance with rate specified according
     * to the rules and defined using items description.
     *
-    * @param item  sale item for which need to calculate tax.
-    * @return      [[model.Tax]] instance.
+    * @param item  sales item for which need to calculate tax.
+    * @return      [[Tax]] instance.
     */
-  def apply(item: SaleItem): Tax = {
+  def apply(item: SalesItem): Tax = {
     val itemContains = item.description.toLowerCase.contains _
 
     var rule: TaxRule = DefaultTaxRule
@@ -43,7 +43,7 @@ object Tax {
   }
 }
 
-/** Holds tax for one order unit.
+/** Holds tax for one sales unit.
   *
   * @author Alexander Chugunov
   */
@@ -64,5 +64,5 @@ private object ExemptTaxRule extends TaxRule {
 }
 
 private class ImportedTaxRule(baseRule: TaxRule) extends TaxRule {
-  override val rate = baseRule.rate + Tax.ImportedTax
+  override val rate = baseRule.rate + Tax.ImportTax
 }

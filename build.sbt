@@ -1,4 +1,4 @@
-name := """sales-tax"""
+name := "sales-tax"
 
 version := "0.1"
 

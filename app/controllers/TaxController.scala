@@ -1,35 +1,30 @@
 package controllers
 
-import model.{Bill, SaleItem}
-
+import model.{Receipt, SalesItem}
 import play.api.libs.json._
 import play.api.mvc._
 import utils.JsonUtils._
 
-import scala.concurrent.ExecutionContext.Implicits.global
-
-/** Handles orders from requests in json format
+/** Handles sales from the request and responds in json format.
   *
   * @author Alexander Chugunov
   */
 class TaxController extends Controller {
 
-  /** Returns `Action` that calculates bill for order items
+  /** Returns `Action` that generates receipt for sales items
     * from the request and send sum of the sales tax in respond.
     */
-  def calculate = Action(validateJson[Seq[SaleItem]]) { request =>
+  def calculate = Action(BodyParsers.parse.json) { request =>
+    val validationResult = request.body.validate[Seq[SalesItem]]
 
-    val items = request.body
-    val bill = Bill(items)
+    def processSales(items: Seq[SalesItem]): JsObject = {
+      val receipt = Receipt(items)
+      toJson(receipt)
+    }
 
-    Ok(toJson(bill))
-  }
-
-  private def validateJson[A: Reads]: BodyParser[A] =
-    BodyParsers.parse.json.validate(
-      _.validate[A]
-        .asEither
-        .left
-        .map(e => UnprocessableEntity(JsError.toJson(e)))
+    validationResult.fold(
+      error => UnprocessableEntity(JsError.toJson(error)),
+      sales => Ok(processSales(sales))
     )
+  }
 }

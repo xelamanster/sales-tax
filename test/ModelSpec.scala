@@ -1,54 +1,53 @@
-import model.{Bill, SaleItem, Tax}
-import org.scalatestplus.play.PlaySpec
-import utils.MathUtils
-import Tax._
 import data.TestData
+import model.Tax._
+import model.{Receipt, SalesItem, Tax}
 import org.scalatest.prop.TableDrivenPropertyChecks._
+import org.scalatestplus.play.PlaySpec
 
 class ModelSpec extends PlaySpec {
-  val testValue = 1
 
   "Tax" should {
     ExemptionKeywords.foreach { exempt =>
-      s"return exempt tax for $exempt" in {
-        Tax(testItem(s"Test $exempt "))
-          .unitTax mustBe testTax(ExemptTax)
+      s"be calculated for $exempt item from exemption category" in {
+        val tax = Tax(s"Test $exempt ")
+
+        tax.unitTax mustBe ExemptTax
       }
 
-      s"return imported exempt tax for $exempt" in {
-        Tax(testItem(s"Test $exempt some text $ImportedKeyword"))
-          .unitTax mustBe testTax(ExemptTax + ImportedTax)
+      s"be calculated for imported $exempt item from exemption category" in {
+        val tax = Tax(s"Test $exempt some description $ImportedKeyword")
+
+        tax.unitTax mustBe (ExemptTax + ImportTax)
       }
     }
 
-    "return imported tax" in {
-      Tax(testItem(s"Test $ImportedKeyword"))
-        .unitTax mustBe testTax(BasicTax + ImportedTax)
+    "be calculated for imported item" in {
+      val tax = Tax(s"Test $ImportedKeyword")
+
+      tax.unitTax mustBe (BasicTax + ImportTax)
     }
 
-    "return default tax" in {
-      Tax(testItem(s"Test some description"))
-        .unitTax mustBe testTax(BasicTax)
+    "be calculated with" in {
+      val tax = Tax(s"Test some description")
+
+      tax.unitTax mustBe BasicTax
     }
   }
 
-  "Bill" should {
+  "Receipt" should {
     forAll(TestData.sales) { (expectedTax, expectedPrice, sales) =>
-      val bill = Bill(sales)
+      val receipt = Receipt(sales)
 
-      s"calculate tax for $sales as $expectedTax" in {
-        bill.salesTax mustBe expectedTax
+      s"contains tax for $sales equal to $expectedTax" in {
+        receipt.salesTax mustBe expectedTax
       }
 
-      s"calculate price for $sales as $expectedPrice" in {
-        bill.salesPrice mustBe expectedPrice
+      s"contains price for $sales equal to $expectedPrice" in {
+        receipt.salesPrice mustBe expectedPrice
       }
     }
   }
 
-  def testTax(percentage: Int): BigDecimal =
-    MathUtils.part(testValue, percentage)
-
-  def testItem(description: String): SaleItem =
-    SaleItem(description, 1, testValue)
+  implicit def stringToTestSalesItem(description: String): SalesItem =
+    SalesItem(description, 1, 100)
 }

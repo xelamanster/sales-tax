@@ -1,6 +1,6 @@
 package data
 
-import model.SaleItem
+import model.SalesItem
 import org.scalatest.prop.TableDrivenPropertyChecks._
 
 /** Contains data for testing purposes.
@@ -35,25 +35,36 @@ object TestData {
       |{"description":"Chocolate Bar","count":1,"unitPrice":0.85},
       |{"description":"Music CD","count":1,"unitPrice":14.99}
       |]"""
+    ),
+
+    unformatted(
+      """[
+        |{"description":"Imported bottle of perfume","count":23,"unitPrice":11.3},
+        |{"description":"Imported chocolate pills","count":11,"unitPrice":21.5}
+        |]"""
     )
   )
 
   val sales = Table(
     ("expectedTax", "expectedPrice", "sales"),
     (7.65,          65.15,           Seq(
-                                       SaleItem("Imported box of chocolates", 1, 10),
-                                       SaleItem("Imported bottle of perfume", 1, 47.5))),
+                                       SalesItem("Imported box of chocolates", 1, 10),
+                                       SalesItem("Imported bottle of perfume", 1, 47.5))),
 
     (6.7,           74.68,           Seq(
-                                       SaleItem("imported bottle of perfume", 1, 27.99),
-                                       SaleItem("bottle of perfume", 1, 18.99),
-                                       SaleItem("packet of headache pills", 1, 9.75),
-                                       SaleItem("box of imported chocolates", 1, 11.25))),
+                                       SalesItem("imported bottle of perfume", 1, 27.99),
+                                       SalesItem("bottle of perfume", 1, 18.99),
+                                       SalesItem("packet of headache pills", 1, 9.75),
+                                       SalesItem("box of imported chocolates", 1, 11.25))),
 
     (1.5,           29.83,           Seq(
-                                       SaleItem("Book", 1, 12.49),
-                                       SaleItem("Chocolate Bar", 1, 0.85),
-                                       SaleItem("Music CD", 1, 14.99)))
+                                       SalesItem("Book", 1, 12.49),
+                                       SalesItem("Chocolate Bar", 1, 0.85),
+                                       SalesItem("Music CD", 1, 14.99))),
+
+    (51.2,           547.6,           Seq(
+                                       SalesItem("Imported bottle of perfume", 23, 11.3),
+                                       SalesItem("Imported chocolate pills", 11, 21.5)))
   )
 
   private def unformatted(s: String): String =
