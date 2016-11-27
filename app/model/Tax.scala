@@ -2,71 +2,67 @@ package model
 
 import utils.MathUtils
 
-/** Contains tax rates, keywords for specifying tax rule
-  * and is a factory for [[model.Tax]] instances.
+/** Contains tax rates, keywords for specifying tax
+  * rule and is a factory for [[Tax]] instances.
   *
   * @author Alexander Chugunov
   */
 object Tax {
 
   val ExemptTax = 0
-  val ImportedTax = 5
+  val ImportTax = 5
   val BasicTax = 10
 
-  val ImportedKeyWord = "imported"
+  val ImportedKeyword = "imported"
 
   /** Keywords for find exempt items */
-  val ExemptionKeyWords = Seq(
+  val ExemptionKeywords = Seq(
     "book",
     "chocolate",
     "pills"
   )
 
-  /** Creates the [[model.Tax]] instance with rate specified according
+  /** Creates the [[Tax]] instance with rate specified according
     * to the rules and defined using items description.
     *
-    * @param item  order item for which need to calculate tax.
-    * @return      [[model.Tax]] instance.
+    * @param item  sales item for which need to calculate tax.
+    * @return      [[Tax]] instance.
     */
-  def apply(item: OrderItem): Tax = {
+  def apply(item: SalesItem): Tax = {
     val itemContains = item.description.toLowerCase.contains _
 
     var rule: TaxRule = DefaultTaxRule
 
-    if (ExemptionKeyWords.exists(itemContains))
+    if (ExemptionKeywords.exists(itemContains))
       rule = ExemptTaxRule
 
-    if (itemContains(ImportedKeyWord))
+    if (itemContains(ImportedKeyword))
       rule = new ImportedTaxRule(rule)
 
-    new TaxImpl(item.unitPrice, rule)
-  }
-
-  private class TaxImpl(price: BigDecimal, rule: TaxRule) extends Tax {
-    override val unitTax = MathUtils.part(price, rule.rate)
+    new Tax(item.unitPrice, rule)
   }
 }
 
-/** Holds tax for one order unit.
+/** Holds tax for one sales unit.
   *
   * @author Alexander Chugunov
   */
-trait Tax {
-  val unitTax: BigDecimal
+class Tax(price: BigDecimal, rule: TaxRule) {
+  val unitTax = MathUtils.part(price, rule.rate)
 }
 
 private trait TaxRule {
-  def rate: Int
+  val rate: Int
 }
 
 private object DefaultTaxRule extends TaxRule {
-  override def rate = Tax.BasicTax
+  override val rate = Tax.BasicTax
 }
 
 private object ExemptTaxRule extends TaxRule {
-  override def rate = Tax.ExemptTax
+  override val rate = Tax.ExemptTax
 }
 
 private class ImportedTaxRule(baseRule: TaxRule) extends TaxRule {
-  override def rate = baseRule.rate + Tax.ImportedTax
+  override val rate = baseRule.rate + Tax.ImportTax
 }

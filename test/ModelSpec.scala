@@ -1,54 +1,53 @@
-import model.{Bill, OrderItem, Tax}
-import org.scalatestplus.play.PlaySpec
-import utils.MathUtils
-import Tax._
 import data.TestData
+import model.Tax._
+import model.{Receipt, SalesItem, Tax}
+import org.scalatest.prop.TableDrivenPropertyChecks._
+import org.scalatestplus.play.PlaySpec
 
 class ModelSpec extends PlaySpec {
-  val testValue = 1
 
   "Tax" should {
-    ExemptionKeyWords.foreach { exempt =>
-      s"return exempt tax for $exempt" in {
-        Tax(testItem(s"Test $exempt "))
-          .unitTax mustBe testTax(ExemptTax)
+    ExemptionKeywords.foreach { exempt =>
+      s"be calculated for $exempt item from exemption category" in {
+        val tax = Tax(s"Test $exempt ")
+
+        tax.unitTax mustBe ExemptTax
       }
 
-      s"return imported exempt tax for $exempt" in {
-        Tax(testItem(s"Test $exempt some text $ImportedKeyWord"))
-          .unitTax mustBe testTax(ExemptTax + ImportedTax)
+      s"be calculated for imported $exempt item from exemption category" in {
+        val tax = Tax(s"Test $exempt some description $ImportedKeyword")
+
+        tax.unitTax mustBe (ExemptTax + ImportTax)
       }
     }
 
-    "return imported tax" in {
-      Tax(testItem(s"Test $ImportedKeyWord"))
-        .unitTax mustBe testTax(BasicTax + ImportedTax)
+    "be calculated for imported item" in {
+      val tax = Tax(s"Test $ImportedKeyword")
+
+      tax.unitTax mustBe (BasicTax + ImportTax)
     }
 
-    "return default tax" in {
-      Tax(testItem(s"Test some description"))
-        .unitTax mustBe testTax(BasicTax)
-    }
-  }
+    "be calculated with" in {
+      val tax = Tax(s"Test some description")
 
-  "Bill" should {
-    TestData.orders.foreach { order =>
-      val (items, tax, price) = order
-      val bill = Bill(items)
-
-      s"calculate valid tax for $items" in {
-        bill.fullTax mustBe tax
-      }
-
-      s"calculate valid price for $items" in {
-        bill.fullPrice mustBe price
-      }
+      tax.unitTax mustBe BasicTax
     }
   }
 
-  def testTax(percentage: Int): BigDecimal =
-    MathUtils.part(testValue, percentage)
+  "Receipt" should {
+    forAll(TestData.sales) { (expectedTax, expectedPrice, sales) =>
+      val receipt = Receipt(sales)
 
-  def testItem(description: String): OrderItem =
-    OrderItem(description, 1, testValue)
+      s"contains tax for $sales equal to $expectedTax" in {
+        receipt.salesTax mustBe expectedTax
+      }
+
+      s"contains price for $sales equal to $expectedPrice" in {
+        receipt.salesPrice mustBe expectedPrice
+      }
+    }
+  }
+
+  implicit def stringToTestSalesItem(description: String): SalesItem =
+    SalesItem(description, 1, 100)
 }

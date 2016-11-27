@@ -1,5 +1,5 @@
 import data.TestData
-import model.OrderItem
+import model.SalesItem
 import org.scalatestplus.play.PlaySpec
 import play.api.libs.json._
 import utils.JsonUtils._
@@ -7,19 +7,32 @@ import utils.JsonUtils._
 class ParsingSpec extends PlaySpec {
 
   "JsonUtils" should {
-    val (sampleItems, _, _) = TestData.parsedJsonOrder
 
-    "read an item from json" in {
-      val json: JsValue = Json.parse(TestData.validJsonOrder)
-      val items = json.validate[Seq[OrderItem]].get
+    val salesWithIndex = TestData.sales.map(_._3).zipWithIndex
 
-      items mustBe sampleItems
+    salesWithIndex.foreach { case (sales, index) =>
+      val jsonSales: String = TestData.jsonSales(index)
+
+      s"read a sales: $sales from json: $jsonSales" in {
+        val json = Json.parse(jsonSales)
+        val items = json.validate[Seq[SalesItem]].get
+
+        items mustBe sales
+      }
+
+      s"write a sales: $sales to json: $jsonSales" in {
+        val json = Json.toJson(sales)
+
+        json.toString() mustBe jsonSales
+      }
     }
 
-    "write an item to json" in {
-      val json: JsValue = Json.toJson(sampleItems)
+    "fail validation of the json with invalid format" in {
+        val json = Json.parse(TestData.invalidJsonSales)
+        val result = json.validate[Seq[SalesItem]]
 
-      json.toString() mustBe TestData.validJsonOrder
+        result.isSuccess mustBe false
     }
   }
+
 }

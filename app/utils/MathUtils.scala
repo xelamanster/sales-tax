@@ -17,7 +17,7 @@ object MathUtils {
     * @param scale number of decimal places.
     * @return      result.
     */
-  def round(num: BigDecimal, scale: Int = 0): BigDecimal =
+  def roundUp(num: BigDecimal, scale: Int = 0): BigDecimal =
     num.setScale(scale, RoundingMode.UP)
 
   /**
@@ -30,6 +30,6 @@ object MathUtils {
     */
   def part(value: BigDecimal, percentage: Int, step: Double = 0.05): BigDecimal = {
     val part = value * percentage / 100
-    round(part / step) * step
+    roundUp(part / step) * step
   }
 }
