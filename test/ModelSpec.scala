@@ -27,7 +27,7 @@ class ModelSpec extends PlaySpec {
       tax.unitTax mustBe (BasicTaxRate + ImportTaxRate)
     }
 
-    "be calculated with" in {
+    "be calculated with basic rate" in {
       val tax = Tax(s"Test some description")
 
       tax.unitTax mustBe BasicTaxRate
