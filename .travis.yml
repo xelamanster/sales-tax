@@ -4,3 +4,9 @@ scala:
 
 jdk:
   - oraclejdk8
+
+deploy:
+  provider: openshift
+  user: $OS_USERNAME
+  password: $OS_PASSWORD
+  domain: "economix-xelamanster.rhcloud.comchange"
