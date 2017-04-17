@@ -3,12 +3,3 @@ scala:
 - 2.11.8
 jdk:
 - oraclejdk8
-deploy:
-  provider: openshift
-  user: xelamanster@gmail.com
-  password:
-    secure: s2xf+Xm6skwjEenzXxmVy98uvycvhdtRacvlSPpkud5b/MPCS/bhKJnvvoTrl87uue7PWBQLWW8KONVvTrx3KucsWl0nI0hA2QVvm3FhEp8PvzWTPsRr5dgUHk74lXuBm6IX3Ge+ZnjEMR6oY9Nbg3XWVhelyqolRGyLSARKpBmeUpROZNhMeQj0lg+FJiqg1Cj9f//gT+UX/x0iOk1AdC2SvRamgFEK++B0ZZdhAcQoxV39dUS3R/iB9I3UKxuCU0f8k6n8BtBcfn0T3CACkSAzfsPPtBGa+SQ7BJ/d3AF1+6Db510bGICcFOx98h5F/p0DWdp0n+DhwKcEPNRk3ZIJNeMUwPc1gtvJBcTzGmPF8W4kQqrOUNsVa+4hbJ+5qLwpIKeqVC2XYW0Rh9PdVBBWZHeZSpmmDD9hF9nzB+oFCf7b36j4DdW0YAkeupz6QWycIl6Pm/nGC0xWulBOFVzs6QY+ZKzYxiXiwn/xNlkHLvEHOVlFqqaek+mxsnlJR8LXzxtffPuYspcd9KMQD0t1xvh92n3rCPoe31F9EfbAiU2EATZRTg2lXJ8J3/b00mwa7fXCr6lbfFgO6qUVTCnQgq8DX0CWsmao0Q5RS6w/ptlQyICOlSjVdP9/7XmjazNF9nb6NVvOtN+MTXFeTW80gyOvEo8q78Ak/U4cbko=
-  app: economix
-  domain: xelamanster
-  on:
-    repo: xelamanster/sales-tax
